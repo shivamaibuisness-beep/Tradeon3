@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="description" content="Tradeon — Premium Options Trading Channel. Join for exclusive signals & market insights.">
+  <title>Tradeon | Premium Options Trading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '3535035600029827');
+    fbq('track', 'PageView');
+  </script>
+
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=3535035600029827&ev=PageView&noscript=1"/></noscript>
+  <!-- End Meta Pixel Code -->
+
+  <style>
+    :root {
+      --bg: #050508;
+      --card: rgba(12, 12, 18, 0.85);
+      --accent: #ff1a1a;
+      --accent-glow: #ff3333;
+      --gold: #d4af37;
+      --gold-light: #f0d77b;
+      --silver: #c0c0c0;
+      --text: #f5f5f7;
+      --muted: #9a9aab;
+      --success: #00e676;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Canvas background */
+    #chart-bg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    /* Overlay gradients for depth */
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 20%, rgba(255, 26, 26, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(5,5,8,0.3) 0%, rgba(5,5,8,0.75) 70%, #050508 100%);
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px 40px;
+      text-align: center;
+    }
+
+    /* Logo */
+    .logo-wrap {
+      position: relative;
+      width: min(220px, 58vw);
+      height: min(220px, 58vw);
+      margin-bottom: 28px;
+      animation: floatIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .logo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--accent), var(--gold), var(--accent));
+      opacity: 0.7;
+      filter: blur(12px);
+      animation: spinGlow 8s linear infinite;
+    }
+
+    .logo {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 26, 26, 0.6);
+      box-shadow:
+        0 0 30px rgba(255, 26, 26, 0.45),
+        0 0 60px rgba(212, 175, 55, 0.15),
+        inset 0 0 20px rgba(0,0,0,0.4);
+      background: #0a0a0f;
+    }
+
+    /* Brand */
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.1rem, 8vw, 3.4rem);
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, #fff 0%, var(--gold-light) 40%, var(--silver) 70%, #fff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+      margin-bottom: 8px;
+      animation: floatIn 0.9s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .tagline {
+      font-size: clamp(0.9rem, 3.2vw, 1.15rem);
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-bottom: 32px;
+      animation: floatIn 0.9s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .tagline span {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* Card */
+    .card {
+      width: min(420px, 100%);
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 28px 24px 32px;
+      box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 26, 26, 0.1),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      animation: floatIn 0.9s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* Countdown */
+    .timer-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .timer {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.8rem, 12vw, 3.6rem);
+      font-weight: 700;
+      color: var(--accent);
+      text-shadow: 0 0 24px rgba(255, 26, 26, 0.6);
+      line-height: 1;
+      margin-bottom: 6px;
+      transition: transform 0.15s ease;
+    }
+
+    .timer.pulse {
+      transform: scale(1.08);
+    }
+
+    .progress-track {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 16px 0 28px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      border-radius: 4px;
+      transform-origin: left;
+      transition: transform 1s linear;
+    }
+
+    /* CTA Button */
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 18px 28px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #fff;
+      background: linear-gradient(135deg, #e60000 0%, #ff1a1a 40%, #cc0000 100%);
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 8px 24px rgba(255, 26, 26, 0.4),
+        0 0 0 1px rgba(255,255,255,0.1) inset;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s;
+      text-decoration: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .cta:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .cta:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 12px 32px rgba(255, 26, 26, 0.55),
+        0 0 0 1px rgba(255,255,255,0.15) inset;
+    }
+
+    .cta:not(:disabled):active {
+      transform: translateY(0);
+    }
+
+    .cta svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .cta::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .cta:not(:disabled):hover::after {
+      transform: translateX(100%);
+    }
+
+    /* Features */
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .feat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .feat i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    /* Footer note */
+    .note {
+      margin-top: 28px;
+      font-size: 0.72rem;
+      color: rgba(154, 154, 171, 0.7);
+      max-width: 320px;
+      line-height: 1.5;
+      animation: floatIn 0.9s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* Animations */
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes spinGlow {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 480px) {
+      .card {
+        padding: 24px 18px 28px;
+        border-radius: 20px;
+      }
+
+      .cta {
+        padding: 16px 20px;
+        font-size: 0.95rem;
+      }
+
+      .features {
+        gap: 12px;
+      }
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="chart-bg"></canvas>
+  <div class="bg-overlay"></div>
+
+  <div class="container">
+    <div class="logo-wrap">
+      <img src="https://i.ibb.co/5hT04Tjs/Tradeon-Logo.jpg" alt="Tradeon Logo" class="logo" width="220" height="220" decoding="async">
+    </div>
+
+    <h1>TRADEON</h1>
+    <p class="tagline">Premium <span>Options Trading</span> Signals</p>
+
+    <div class="card">
+      <div class="timer-label">Auto redirect in</div>
+      <div class="timer" id="countdown">10</div>
+
+      <div class="progress-track">
+        <div class="progress-bar" id="progress"></div>
+      </div>
+
+      <button class="cta" id="joinBtn" disabled aria-label="Join Tradeon Channel">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06-.01.14-.02.22z"/>
+        </svg>
+        JOIN CHANNEL NOW
+      </button>
+
+      <div class="features">
+        <div class="feat"><i></i> Live Signals</div>
+        <div class="feat"><i></i> Expert Analysis</div>
+        <div class="feat"><i></i> Fast Alerts</div>
+      </div>
+    </div>
+
+    <p class="note">You will be redirected to the official Tradeon Telegram channel in a few seconds. Premium options insights await.</p>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ========== Config ==========
+      const CHANNEL_URL = 'https://telegram.me/+vP_Owa33vL1mMjQ0';
+      const REDIRECT_SECONDS = 10;
+      const PIXEL_ID = '3535035600029827';
+
+      // ========== Fake-click / Bot protection ==========
+      let humanVerified = false;
+      let mouseMoved = false;
+      let touchStarted = false;
+      let startTime = Date.now();
+      const MIN_INTERACTION_MS = 1200; // require at least ~1.2s presence + interaction
+
+      function markHuman() {
+        if (Date.now() - startTime < MIN_INTERACTION_MS) return;
+        humanVerified = true;
+        enableCTA();
+      }
+
+      window.addEventListener('mousemove', function onMove() {
+        mouseMoved = true;
+        markHuman();
+        window.removeEventListener('mousemove', onMove);
+      }, { passive: true, once: true });
+
+      window.addEventListener('touchstart', function onTouch() {
+        touchStarted = true;
+        markHuman();
+        window.removeEventListener('touchstart', onTouch);
+      }, { passive: true, once: true });
+
+      // Also allow after full timer if user stayed (less aggressive on pure mobile)
+      setTimeout(function () {
+        if (!humanVerified) {
+          humanVerified = true;
+          enableCTA();
+        }
+      }, 4500);
+
+      // ========== Countdown & Redirect ==========
+      const countdownEl = document.getElementById('countdown');
+      const progressEl = document.getElementById('progress');
+      const joinBtn = document.getElementById('joinBtn');
+      let remaining = REDIRECT_SECONDS;
+      let redirected = false;
+
+      function enableCTA() {
+        joinBtn.disabled = false;
+      }
+
+      function trackEvent(name, params) {
+        try {
+          if (typeof fbq === 'function') {
+            fbq('track', name, params || {});
+          }
+        } catch (e) {}
+      }
+
+      function doRedirect(source) {
+        if (redirected) return;
+        redirected = true;
+
+        // Track conversion intent
+        trackEvent('Lead', { content_name: 'Tradeon_Join', source: source || 'auto' });
+        trackEvent('Contact');
+
+        // Small delay so pixel has time to fire
+        setTimeout(function () {
+          window.location.href = CHANNEL_URL;
+        }, 180);
+      }
+
+      // Progress bar animation
+      progressEl.style.transform = 'scaleX(1)';
+      requestAnimationFrame(function () {
+        progressEl.style.transition = 'transform ' + REDIRECT_SECONDS + 's linear';
+        progressEl.style.transform = 'scaleX(0)';
+      });
+
+      const timerInterval = setInterval(function () {
+        remaining--;
+        countdownEl.textContent = remaining;
+        countdownEl.classList.add('pulse');
+
+        setTimeout(function () {
+          countdownEl.classList.remove('pulse');
+        }, 150);
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          doRedirect('timer');
+        }
+      }, 1000);
+
+      // Manual join (only after human check)
+      joinBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (!humanVerified || redirected) return;
+
+        // Extra bot check: must have had some interaction or waited
+        const elapsed = Date.now() - startTime;
+        if (elapsed < 800 && !mouseMoved && !touchStarted) {
+          return; // ignore suspiciously fast pure programmatic clicks
+        }
+
+        clearInterval(timerInterval);
+        doRedirect('button');
+      });
+
+      // ========== 3D-style Candlestick Chart Background ==========
+      const canvas = document.getElementById('chart-bg');
+      const ctx = canvas.getContext('2d');
+      let width, height, dpr;
+      let candles = [];
+      let animId;
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        initCandles();
+      }
+
+      function initCandles() {
+        candles = [];
+        const count = Math.ceil(width / 18) + 4;
+        let price = height * 0.55;
+
+        for (let i = 0; i < count; i++) {
+          const change = (Math.random() - 0.48) * 28;
+          const open = price;
+          const close = price + change;
+          const high = Math.max(open, close) + Math.random() * 12;
+          const low = Math.min(open, close) - Math.random() * 12;
+
+          candles.push({
+            open,
+            close,
+            high,
+            low,
+            x: i * 18 - 20
+          });
+
+          price = close;
+        }
+      }
+
+      function drawCandles() {
+        ctx.clearRect(0, 0, width, height);
+
+        // subtle grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+        ctx.lineWidth = 1;
+
+        for (let y = 0; y < height; y += 40) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+        }
+
+        // 3D perspective tilt via transform
+        ctx.save();
+        ctx.translate(width * 0.5, height * 0.55);
+        ctx.transform(1, 0.08, -0.15, 0.92, 0, 0);
+        ctx.translate(-width * 0.5, -height * 0.55);
+
+        for (let i = 0; i < candles.length; i++) {
+          const c = candles[i];
+          const isUp = c.close >= c.open;
+          const bodyTop = Math.min(c.open, c.close);
+          const bodyH = Math.max(Math.abs(c.close - c.open), 2);
+          const x = c.x;
+
+          // wick
+          ctx.beginPath();
+          ctx.strokeStyle = isUp
+            ? 'rgba(0, 230, 118, 0.55)'
+            : 'rgba(255, 50, 50, 0.55)';
+          ctx.lineWidth = 1.5;
+          ctx.moveTo(x + 5, c.high);
+          ctx.lineTo(x + 5, c.low);
+          ctx.stroke();
+
+          // body with glow
+          ctx.fillStyle = isUp
+            ? 'rgba(0, 230, 118, 0.75)'
+            : 'rgba(255, 40, 40, 0.75)';
+
+          ctx.shadowColor = isUp
+            ? 'rgba(0, 230, 118, 0.4)'
+            : 'rgba(255, 40, 40, 0.4)';
+
+          ctx.shadowBlur = 8;
+          ctx.fillRect(x, bodyTop, 10, bodyH);
+          ctx.shadowBlur = 0;
+        }
+
+        ctx.restore();
+      }
+
+      function animate() {
+        // drift candles left slowly & regenerate
+        for (let i = 0; i < candles.length; i++) {
+          candles[i].x -= 0.35;
+        }
+
+        if (candles[0] && candles[0].x < -30) {
+          candles.shift();
+
+          const last = candles[candles.length - 1];
+          const change = (Math.random() - 0.48) * 26;
+          const open = last.close;
+          const close = open + change;
+
+          candles.push({
+            open,
+            close,
+            high: Math.max(open, close) + Math.random() * 11,
+            low: Math.min(open, close) - Math.random() * 11,
+            x: last.x + 18
+          });
+        }
+
+        drawCandles();
+        animId = requestAnimationFrame(animate);
+      }
+
+      // Init chart only if not reduced motion
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        resize();
+        window.addEventListener('resize', resize, { passive: true });
+        animate();
+      } else {
+        // static dark bg is fine
+        canvas.style.display = 'none';
+      }
+
+      // Track page engagement
+      trackEvent('ViewContent', { content_name: 'Tradeon_Landing' });
+    })();
+  </script>
+</body>
+</html>
